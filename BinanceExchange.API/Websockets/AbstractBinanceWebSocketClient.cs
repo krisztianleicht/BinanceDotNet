@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Authentication;
+using System.Text;
 using System.Threading.Tasks;
 using BinanceExchange.API.Client.Interfaces;
 using BinanceExchange.API.Enums;
@@ -67,6 +68,27 @@ namespace BinanceExchange.API.Websockets
         }
 
         /// <summary>
+        /// Connect to the Kline WebSocket
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <param name="messageEventHandler"></param>
+        /// <returns></returns>
+        public Guid ConnectToKlineWebSocketCombined(string[] symbols, KlineInterval interval, BinanceWebSocketMessageHandler<CombinedBinanceKlineData> messageEventHandler)
+        {
+            var symbolName = new StringBuilder();
+            for (int i = 0; i < symbols.Length; i++)
+            {
+                string symbol = symbols[i];
+                if (i > 0)
+                    symbolName.Append('/');
+                symbolName.Append(symbol.ToLower()).Append("@kline_" + EnumExtensions.GetEnumMemberValue(interval));
+            }
+
+            var endpoint = new Uri($"{CombinedWebsocketUri}={symbolName.ToString()}");
+            return CreateBinanceWebSocket(endpoint, messageEventHandler);
+        }
+
+        /// <summary>
         /// Connect to the Depth WebSocket
         /// </summary>
         /// <param name="symbol"></param>
@@ -88,7 +110,7 @@ namespace BinanceExchange.API.Websockets
         /// <returns></returns>
         public Guid ConnectToPartialDepthWebSocket(string symbol, PartialDepthLevels levels, BinanceWebSocketMessageHandler<BinancePartialData> messageEventHandler)
         {
-            Guard.AgainstNullOrEmpty(symbol, nameof(symbol)); 
+            Guard.AgainstNullOrEmpty(symbol, nameof(symbol));
             Logger.Debug("Connecting to Partial Depth Web Socket");
             var endpoint = new Uri($"{BaseWebsocketUri}/{symbol.ToLower()}@depth{(int)levels}");
             return CreateBinanceWebSocket(endpoint, messageEventHandler);
