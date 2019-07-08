@@ -13,7 +13,7 @@ using log4net;
 
 namespace BinanceExchange.API
 {
-    internal static class RequestClient
+    public static class RequestClient
     {
         private static readonly HttpClient HttpClient;
         private static SemaphoreSlim _rateSemaphore;
