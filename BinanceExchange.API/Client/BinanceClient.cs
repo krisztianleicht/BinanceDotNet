@@ -400,6 +400,18 @@ namespace BinanceExchange.API.Client
         }
         #endregion
 
+        #region Margin
+
+        public async Task<List<MarginOrderResponse>> GetMarginAllOrders(MarginAllOrdersRequest request, int receiveWindow = -1)
+        {
+            receiveWindow = SetReceiveWindow(receiveWindow);
+            Guard.AgainstNull(request.Symbol);
+
+            return await _apiProcessor.ProcessGetRequest<List<MarginOrderResponse>>(Endpoints.Margin.AllOrders(request), receiveWindow);
+        }
+
+        #endregion
+
         private int SetReceiveWindow(int receiveWindow)
         {
             if (receiveWindow == -1)
