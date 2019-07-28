@@ -38,7 +38,12 @@ namespace BinanceExchange.API.Models.Response
         public bool IcebergAllowed { get; set; }
 
         [DataMember(Order = 9)]
+        public bool IsMarginTradingAllowed { get; set; }
+
+        [DataMember(Order = 10)]
         [JsonProperty(ItemConverterType = typeof(ExchangeInfoSymbolFilterConverter))]
         public List<ExchangeInfoSymbolFilter> Filters { get; set; }
+
+
     }
 }
