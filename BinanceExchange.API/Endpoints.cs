@@ -227,7 +227,7 @@ namespace BinanceExchange.API
             public static BinanceEndpointData AllOrders(MarginAllOrdersRequest request)
             {
                 var queryString = GenerateQueryStringFromData(request);
-                return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/query/allOrders?{queryString}"), EndpointSecurityType.Signed);
+                return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/allOrders?{queryString}"), EndpointSecurityType.Signed);
             }
         }
 
