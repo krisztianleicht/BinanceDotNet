@@ -23,13 +23,9 @@ namespace BinanceExchange.API.Models.Request
 
         [DataMember(Order = 4)]
         [JsonConverter(typeof(EpochTimeConverter))]
-        public DateTime TimeStamp { get; set; }
-
-        [DataMember(Order = 5)]
-        [JsonConverter(typeof(EpochTimeConverter))]
         public DateTime? StartTime { get; set; }
 
-        [DataMember(Order = 6)]
+        [DataMember(Order = 5)]
         [JsonConverter(typeof(EpochTimeConverter))]
         public DateTime? EndTime { get; set; }
     }
