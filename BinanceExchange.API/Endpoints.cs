@@ -248,6 +248,29 @@ namespace BinanceExchange.API
                 return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/order?{queryString}"), EndpointSecurityType.Signed);
             }
 
+            /// <summary>
+            /// Start a user data stream
+            /// </summary>
+            public static BinanceEndpointData StartUserDataStream => new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/userDataStream"), EndpointSecurityType.ApiKey);
+
+            /// <summary>
+            /// Ping a user data stream to prevent a timeout
+            /// </summary>
+            public static BinanceEndpointData KeepAliveUserDataStream(string listenKey)
+            {
+                return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/userDataStream?listenKey={listenKey}"),
+                    EndpointSecurityType.ApiKey);
+            }
+
+            /// <summary>
+            /// Close a user data stream to prevent
+            /// </summary>
+            public static BinanceEndpointData CloseUserDataStream(string listenKey)
+            {
+                return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/userDataStream?listenKey={listenKey}"),
+                    EndpointSecurityType.ApiKey);
+            }
+
         }
 
         private static string GenerateQueryStringFromData(IRequest request)

@@ -403,6 +403,39 @@ namespace BinanceExchange.API.Client
 
         #region Margin
 
+        /// <summary>
+        /// Starts a user data stream
+        /// </summary>
+        /// /// <returns><see cref="UserDataStreamResponse"/></returns>
+        public async Task<UserDataStreamResponse> StartMarginUserDataStream()
+        {
+            return await _apiProcessor.ProcessPostRequest<UserDataStreamResponse>(Endpoints.Margin.StartUserDataStream);
+        }
+
+        /// <summary>
+        /// Pings a user data stream to prevent timeouts
+        /// </summary>
+        /// <param name="userDataListenKey"></param>
+        /// /// <returns><see cref="UserDataStreamResponse"/></returns>
+        public async Task<UserDataStreamResponse> KeepAliveMarginUserDataStream(string userDataListenKey)
+        {
+            Guard.AgainstNullOrEmpty(userDataListenKey);
+
+            return await _apiProcessor.ProcessPutRequest<UserDataStreamResponse>(Endpoints.Margin.KeepAliveUserDataStream(userDataListenKey));
+        }
+
+        /// <summary>
+        /// Closes a user data stream
+        /// </summary>
+        /// <param name="userDataListenKey"></param>
+        /// /// <returns><see cref="UserDataStreamResponse"/></returns>
+        public async Task<UserDataStreamResponse> CloseMarginUserDataStream(string userDataListenKey)
+        {
+            Guard.AgainstNullOrEmpty(userDataListenKey);
+
+            return await _apiProcessor.ProcessDeleteRequest<UserDataStreamResponse>(Endpoints.Margin.CloseUserDataStream(userDataListenKey));
+        }
+
         public async Task<List<MarginOrderResponse>> GetMarginAllOrders(MarginAllOrdersRequest request, int receiveWindow = -1)
         {
             receiveWindow = SetReceiveWindow(receiveWindow);
