@@ -18,7 +18,8 @@ namespace BinanceExchange.API.Client
     /// </summary>
     public class BinanceClient : IBinanceClient
     {
-        public TimeSpan TimestampOffset {
+        public TimeSpan TimestampOffset
+        {
             get => _timestampOffset;
             set
             {
@@ -82,8 +83,8 @@ namespace BinanceExchange.API.Client
             Guard.AgainstNullOrEmpty(userDataListenKey);
 
             return await _apiProcessor.ProcessPutRequest<UserDataStreamResponse>(Endpoints.UserStream.KeepAliveUserDataStream(userDataListenKey));
-        }        
-        
+        }
+
         /// <summary>
         /// Closes a user data stream
         /// </summary>
@@ -153,7 +154,7 @@ namespace BinanceExchange.API.Client
         {
             Guard.AgainstNull(request);
             Guard.AgainstNull(request.Symbol);
-            if (request.Limit == null || (request.Limit <= 0 || request.Limit > 500)) 
+            if (request.Limit == null || (request.Limit <= 0 || request.Limit > 500))
             {
                 request.Limit = 500;
             }
@@ -171,7 +172,7 @@ namespace BinanceExchange.API.Client
             Guard.AgainstNull(request.Symbol);
             Guard.AgainstNull(request.Interval);
 
-            if (request.Limit == 0 || request.Limit > 500) 
+            if (request.Limit == 0 || request.Limit > 500)
             {
                 request.Limit = 500;
             }
@@ -197,7 +198,7 @@ namespace BinanceExchange.API.Client
         /// <returns></returns>
         public async Task<List<SymbolPriceResponse>> GetSymbolsPriceTicker()
         {
-             return await _apiProcessor.ProcessGetRequest<List<SymbolPriceResponse>>(Endpoints.MarketData.AllSymbolsPriceTicker);
+            return await _apiProcessor.ProcessGetRequest<List<SymbolPriceResponse>>(Endpoints.MarketData.AllSymbolsPriceTicker);
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace BinanceExchange.API.Client
         /// <returns></returns>
         public async Task<List<SymbolOrderBookResponse>> GetSymbolOrderBookTicker()
         {
-             return await _apiProcessor.ProcessGetRequest<List<SymbolOrderBookResponse>>(Endpoints.MarketData.SymbolsOrderBookTicker);
+            return await _apiProcessor.ProcessGetRequest<List<SymbolOrderBookResponse>>(Endpoints.MarketData.SymbolsOrderBookTicker);
         }
         #endregion
 
@@ -277,7 +278,7 @@ namespace BinanceExchange.API.Client
         {
             receiveWindow = SetReceiveWindow(receiveWindow);
             Guard.AgainstNull(request.Symbol);
-      
+
             return await _apiProcessor.ProcessDeleteRequest<CancelOrderResponse>(Endpoints.Account.CancelOrder(request), receiveWindow);
         }
 
@@ -303,7 +304,7 @@ namespace BinanceExchange.API.Client
         {
             receiveWindow = SetReceiveWindow(receiveWindow);
             Guard.AgainstNull(request.Symbol);
-      
+
             return await _apiProcessor.ProcessGetRequest<List<OrderResponse>>(Endpoints.Account.AllOrders(request), receiveWindow);
         }
 
@@ -408,6 +409,61 @@ namespace BinanceExchange.API.Client
             Guard.AgainstNull(request.Symbol);
 
             return await _apiProcessor.ProcessGetRequest<List<MarginOrderResponse>>(Endpoints.Margin.AllOrders(request), receiveWindow);
+        }
+
+        /// <summary>
+        /// Creates an order based on the provided request
+        /// </summary>
+        /// <param name="request">The <see cref="CreateOrderRequest"/> that is used to define the order</param>
+        /// <returns>This method can return <see cref="AcknowledgeCreateOrderResponse"/>, <see cref="FullCreateOrderResponse"/> 
+        /// or <see cref="ResultCreateOrderResponse"/> based on the provided NewOrderResponseType enum in the request.
+        /// </returns>
+        public async Task<MarginBaseCreateOrderResponse> CreateMarginOrder(MarginCreateOrderRequest request)
+        {
+            Guard.AgainstNull(request.Symbol);
+            Guard.AgainstNull(request.Side);
+            Guard.AgainstNull(request.Type);
+            Guard.AgainstNull(request.Quantity);
+
+            switch (request.NewOrderResponseType)
+            {
+                case NewOrderResponseType.Acknowledge:
+                    return await _apiProcessor.ProcessPostRequest<MarginAcknowledgeCreateOrderResponse>(Endpoints.Margin.NewOrder(request));
+                case NewOrderResponseType.Full:
+                    return await _apiProcessor.ProcessPostRequest<MarginFullCreateOrderResponse>(Endpoints.Margin.NewOrder(request));
+                default:
+                    return await _apiProcessor.ProcessPostRequest<MarginResultCreateOrderResponse>(Endpoints.Margin.NewOrder(request));
+            }
+
+        }
+
+        ///// <summary>
+        ///// Queries an order based on the provided request
+        ///// </summary>
+        ///// <param name="request">The <see cref="QueryOrderRequest"/> that is used to define the order</param>
+        ///// <param name="receiveWindow"></param>
+        ///// <returns></returns>
+        //public async Task<OrderResponse> QueryMarginOrder(MarginQueryOrderRequest request, int receiveWindow = -1)
+        //{
+        //    receiveWindow = SetReceiveWindow(receiveWindow);
+        //    Guard.AgainstNull(request.Symbol);
+
+        //    return await _apiProcessor.ProcessGetRequest<OrderResponse>(Endpoints.Account.QueryOrder(request), receiveWindow);
+        //}
+
+
+        /// <summary>
+        /// Cancels an order based on the provided request
+        /// </summary>
+        /// <param name="request">The <see cref="CancelOrderRequest"/> that is used to define the order</param>
+        /// <param name="receiveWindow"></param>
+        /// <returns></returns>
+        public async Task<MarginCancelOrderResponse> CancelMarginOrder(MarginCancelOrderRequest request, int receiveWindow = -1)
+        {
+            receiveWindow = SetReceiveWindow(receiveWindow);
+            Guard.AgainstNull(request.Symbol);
+
+            return await _apiProcessor.ProcessDeleteRequest<MarginCancelOrderResponse>(Endpoints.Margin.CancelOrder(request), receiveWindow);
         }
 
         #endregion

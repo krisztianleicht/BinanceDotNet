@@ -151,7 +151,7 @@ namespace BinanceExchange.API
             {
                 var queryString = GenerateQueryStringFromData(request);
                 return new BinanceEndpointData(new Uri($"{APIPrefix}/{ApiVersion}/order?{queryString}"), EndpointSecurityType.Signed);
-            }            
+            }
             public static BinanceEndpointData NewOrderTest(CreateOrderRequest request)
             {
                 var queryString = GenerateQueryStringFromData(request);
@@ -229,6 +229,25 @@ namespace BinanceExchange.API
                 var queryString = GenerateQueryStringFromData(request);
                 return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/allOrders?{queryString}"), EndpointSecurityType.Signed);
             }
+
+            public static BinanceEndpointData NewOrder(MarginCreateOrderRequest request)
+            {
+                var queryString = GenerateQueryStringFromData(request);
+                return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/order?{queryString}"), EndpointSecurityType.Signed);
+            }
+
+            //public static BinanceEndpointData QueryOrder(MarginQueryOrderRequest request)
+            //{
+            //    var queryString = GenerateQueryStringFromData(request);
+            //    return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/order?{queryString}"), EndpointSecurityType.Signed);
+            //}
+
+            public static BinanceEndpointData CancelOrder(MarginCancelOrderRequest request)
+            {
+                var queryString = GenerateQueryStringFromData(request);
+                return new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/order?{queryString}"), EndpointSecurityType.Signed);
+            }
+
         }
 
         private static string GenerateQueryStringFromData(IRequest request)

@@ -11,7 +11,7 @@ namespace BinanceExchange.API.Models.Request
     /// Request object used to create a new Binance order
     /// </summary>
     [DataContract]
-    public class CreateOrderRequest: IRequest
+    public class CreateOrderRequest : IRequest
     {
         [DataMember(Order = 1)]
         public string Symbol { get; set; }
