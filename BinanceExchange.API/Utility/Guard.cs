@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BinanceExchange.API.Utility
 {
@@ -9,6 +10,21 @@ namespace BinanceExchange.API.Utility
             if (string.IsNullOrEmpty(param))
             {
                 throw new ArgumentNullException(name ?? "The Guarded argument was null or empty.");
+            }
+        }
+
+        public static void AgainstNullOrEmpty(List<string> param, string name = null)
+        {
+            if (param == null || param.Count == 0)
+            {
+                throw new ArgumentNullException(name ?? "The Guarded argument was null or empty.");
+            }
+            else
+            {
+                foreach (var entry in param)
+                {
+                    AgainstNullOrEmpty(entry);
+                }
             }
         }
 

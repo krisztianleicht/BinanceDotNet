@@ -129,6 +129,29 @@ namespace BinanceExchange.API.Websockets
             var endpoint = new Uri($"{CombinedWebsocketUri}={symbols}");
             return CreateBinanceWebSocket(endpoint, messageEventHandler);
         }
+
+        /// <summary>
+        /// Connect to the Combined Depth WebSocket
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <param name="messageEventHandler"></param>
+        /// <returns></returns>
+        public Guid ConnectToDepthWebSocketCombined(List<string> symbols, BinanceWebSocketMessageHandler<BinanceCombinedDepthData> messageEventHandler)
+        {
+            Guard.AgainstNullOrEmpty(symbols, nameof(symbols));
+            var combinedsymbols = new StringBuilder();
+            for (int i = 0; i < symbols.Count; i++)
+            {
+                string symbol = symbols[i];
+                if (i > 0)
+                    combinedsymbols.Append('/');
+                combinedsymbols.Append(symbol.ToLower()).Append("@depth");
+            }
+            Logger.Debug("Connecting to Combined Depth Web Socket");
+            var endpoint = new Uri($"{CombinedWebsocketUri}={combinedsymbols}");
+            return CreateBinanceWebSocket(endpoint, messageEventHandler);
+        }
+
         /// <summary>
         /// Connect to the Combined Partial Depth WebSocket
         /// </summary>
