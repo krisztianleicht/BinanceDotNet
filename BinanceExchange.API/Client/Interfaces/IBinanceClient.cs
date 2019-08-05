@@ -14,6 +14,7 @@ namespace BinanceExchange.API.Client.Interfaces
         /// </summary>
         /// /// <returns><see cref="UserDataStreamResponse"/></returns>
         Task<UserDataStreamResponse> StartUserDataStream();
+        Task<UserDataStreamResponse> StartMarginUserDataStream();
 
         /// <summary>
         /// Gets or sets the Timestamp offset of the Binance Client
@@ -26,6 +27,7 @@ namespace BinanceExchange.API.Client.Interfaces
         /// <param name="userDataListenKey"></param>
         /// /// <returns><see cref="UserDataStreamResponse"/></returns>
         Task<UserDataStreamResponse> KeepAliveUserDataStream(string userDataListenKey);
+        Task<UserDataStreamResponse> KeepAliveMarginUserDataStream(string userDataListenKey);
 
         /// <summary>
         /// Closes a user data stream
@@ -33,6 +35,7 @@ namespace BinanceExchange.API.Client.Interfaces
         /// <param name="userDataListenKey"></param>
         /// /// <returns><see cref="UserDataStreamResponse"/></returns>
         Task<UserDataStreamResponse> CloseUserDataStream(string userDataListenKey);
+        Task<UserDataStreamResponse> CloseMarginUserDataStream(string userDataListenKey);
 
         /// <summary>
         /// Test the connectivity to the API

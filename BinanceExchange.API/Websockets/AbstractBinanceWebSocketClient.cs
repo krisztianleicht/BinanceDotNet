@@ -224,6 +224,16 @@ namespace BinanceExchange.API.Websockets
             return CreateUserDataBinanceWebSocket(endpoint, userDataMessageHandlers);
         }
 
+        public async Task<Guid> ConnectToMarginUserDataWebSocket(UserDataWebSocketMessages userDataMessageHandlers)
+        {
+            Guard.AgainstNull(BinanceClient, nameof(BinanceClient));
+            Logger.Debug("Connecting to User Data Web Socket");
+            var streamResponse = await BinanceClient.StartMarginUserDataStream();
+
+            var endpoint = new Uri($"{BaseWebsocketUri}/{streamResponse.ListenKey}");
+            return CreateUserDataBinanceWebSocket(endpoint, userDataMessageHandlers);
+        }
+
         private Guid CreateUserDataBinanceWebSocket(Uri endpoint, UserDataWebSocketMessages userDataWebSocketMessages)
         {
             var websocket = new BinanceWebSocket(endpoint.AbsoluteUri);
