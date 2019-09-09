@@ -42,6 +42,8 @@ namespace BinanceExchange.API.Websockets
 
         protected const string AccountEventType = "outboundAccountInfo";
         protected const string OrderTradeEventType = "executionReport";
+        protected const string AccountPositionEventType = "outboundAccountPosition";
+
 
         public AbstractBinanceWebSocketClient(IBinanceClient binanceClient, ILog logger = null)
         {
@@ -250,6 +252,10 @@ namespace BinanceExchange.API.Websockets
                     case AccountEventType:
                         var userData = JsonConvert.DeserializeObject<BinanceAccountUpdateData>(e.Data);
                         userDataWebSocketMessages.AccountUpdateMessageHandler?.Invoke(userData);
+                        break;
+                    case AccountPositionEventType:
+                        var accountData = JsonConvert.DeserializeObject<BinanceAccountUpdateData>(e.Data);
+                        userDataWebSocketMessages.AccountBalanceChangeMessageHandler?.Invoke(accountData);
                         break;
                     case OrderTradeEventType:
                         var orderTradeData = JsonConvert.DeserializeObject<BinanceTradeOrderData>(e.Data);
