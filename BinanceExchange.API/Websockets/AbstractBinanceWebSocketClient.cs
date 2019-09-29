@@ -186,6 +186,27 @@ namespace BinanceExchange.API.Websockets
         }
 
         /// <summary>
+        /// Connect to the Kline WebSocket
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <param name="messageEventHandler"></param>
+        /// <returns></returns>
+        public Guid ConnectToTradesWebSocketCombined(string[] symbols, BinanceWebSocketMessageHandler<CombinedBinanceAggregateTradeData> messageEventHandler)
+        {
+            var symbolName = new StringBuilder();
+            for (int i = 0; i < symbols.Length; i++)
+            {
+                string symbol = symbols[i];
+                if (i > 0)
+                    symbolName.Append('/');
+                symbolName.Append(symbol).Append("@aggTrade");
+            }
+
+            var endpoint = new Uri($"{CombinedWebsocketUri}={symbolName.ToString()}");
+            return CreateBinanceWebSocket(endpoint, messageEventHandler);
+        }
+
+        /// <summary>
         /// Connect to the Individual Symbol Ticker WebSocket
         /// </summary>
         /// <param name="symbol"></param>
