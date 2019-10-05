@@ -320,6 +320,28 @@ namespace BinanceExchange.API.Client
         }
 
         /// <summary>
+        /// Queries the current margin account information
+        /// </summary>
+        /// <param name="receiveWindow"></param>
+        /// <returns></returns>
+        public async Task<MarginAccountInformationResponse> GetMarginAccountInformation(int receiveWindow = -1)
+        {
+            receiveWindow = SetReceiveWindow(receiveWindow);
+            return await _apiProcessor.ProcessGetRequest<MarginAccountInformationResponse>(Endpoints.Margin.Account.AccountInformation, receiveWindow);
+        }
+
+        /// <summary>
+        /// Queries the futures margin account information
+        /// </summary>
+        /// <param name="receiveWindow"></param>
+        /// <returns></returns>
+        public async Task<FuturesAccountInformationResponse> GetFuturesAccountInformation(int receiveWindow = -1)
+        {
+            receiveWindow = SetReceiveWindow(receiveWindow);
+            return await _apiProcessor.ProcessGetRequest<FuturesAccountInformationResponse>(Endpoints.Futures.Account.AccountInformation, receiveWindow);
+        }
+
+        /// <summary>
         /// Queries the all trades against this account
         /// </summary>
         /// <param name="request"></param>

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace BinanceExchange.API.Models.WebSocket
 {
     [DataContract]
-    public class BalanceResponseData: IBalanceResponse
+    public class BalanceResponseData : IBalanceResponse
     {
         [JsonProperty(PropertyName = "a")]
         public string Asset { get; set; }

@@ -40,9 +40,15 @@ namespace BinanceExchange.API
         /// </summary>
         internal static string SAPIBaseUrl = "https://api.binance.com/sapi";
 
+        /// <summary>
+        /// Defaults to SAPI binance domain (https)
+        /// </summary>
+        internal static string FAPIBaseUrl = "https://fapi.binance.com/fapi";
+
         private static string APIPrefix { get; } = $"{APIBaseUrl}";
         private static string WAPIPrefix { get; } = $"{WAPIBaseUrl}";
         private static string SAPIPrefix { get; } = $"{SAPIBaseUrl}";
+        private static string FAPIPrefix { get; } = $"{FAPIBaseUrl}";
 
         public static class UserStream
         {
@@ -224,6 +230,13 @@ namespace BinanceExchange.API
         {
             internal static string ApiVersion = "v1";
 
+            public static class Account
+            {
+                internal static string ApiVersion = "v1";
+
+                public static BinanceEndpointData AccountInformation => new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/account"), EndpointSecurityType.Signed);
+            }
+
             public static BinanceEndpointData AllOrders(MarginAllOrdersRequest request)
             {
                 var queryString = GenerateQueryStringFromData(request);
@@ -272,6 +285,18 @@ namespace BinanceExchange.API
             }
 
         }
+
+        public static class Futures
+        {
+
+            public static class Account
+            {
+                internal static string ApiVersion = "v1";
+
+                public static BinanceEndpointData AccountInformation => new BinanceEndpointData(new Uri($"{FAPIPrefix}/{ApiVersion}/account"), EndpointSecurityType.Signed);
+            }
+        }
+
 
         private static string GenerateQueryStringFromData(IRequest request)
         {
