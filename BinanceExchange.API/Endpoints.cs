@@ -234,7 +234,7 @@ namespace BinanceExchange.API
             {
                 internal static string ApiVersion = "v1";
 
-                public static BinanceEndpointData AccountInformation => new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/account"), EndpointSecurityType.Signed);
+                public static BinanceEndpointData AccountInformation => new BinanceEndpointData(new Uri($"{SAPIPrefix}/{ApiVersion}/margin/account"), EndpointSecurityType.Signed);
             }
 
             public static BinanceEndpointData AllOrders(MarginAllOrdersRequest request)
