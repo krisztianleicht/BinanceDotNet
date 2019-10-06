@@ -10,6 +10,7 @@ using BinanceExchange.API.Models.WebSocket;
 using BinanceExchange.API.Utility;
 using log4net;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using WebSocketSharp;
 using IWebSocketResponse = BinanceExchange.API.Models.WebSocket.Interfaces.IWebSocketResponse;
 
@@ -327,8 +328,12 @@ namespace BinanceExchange.API.Websockets
             };
             websocket.OnMessage += (sender, e) =>
             {
-                Logger.Debug($"WebSocket Messge Received on: {endpoint.AbsoluteUri}");
+                Logger.Debug($"WebSocket Message Received on: {endpoint.AbsoluteUri}");
                 //TODO: Log message received
+                //ITraceWriter traceWriter = new MemoryTraceWriter();
+                //JsonSerializer.Create().Deserialize(
+                //var data = JsonConvert.DeserializeObject<T>(e.Data, new JsonSerializerSettings { TraceWriter = traceWriter });
+                //Logger.Debug(traceWriter.ToString());
                 var data = JsonConvert.DeserializeObject<T>(e.Data);
                 messageEventHandler(data);
             };
