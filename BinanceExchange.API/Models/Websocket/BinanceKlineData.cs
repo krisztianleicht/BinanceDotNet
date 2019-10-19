@@ -13,20 +13,20 @@ namespace BinanceExchange.API.Models.WebSocket
     public class BinanceKlineData: ISymbolWebSocketResponse
     {
         [JsonProperty(PropertyName = "e")]
-        [DataMember(Order = 1)]
+        [DataMember(Order = 1, Name = "e")]
         public string EventType { get; set; }
 
         [JsonProperty(PropertyName = "E")]
-        [DataMember(Order = 2)]
+        [DataMember(Order = 2, Name = "E")]
         [JsonConverter(typeof(EpochTimeConverter))]
         public DateTime EventTime { get; set; }
 
         [JsonProperty(PropertyName = "s")]
-        [DataMember(Order = 3)]
+        [DataMember(Order = 3, Name = "s")]
         public string Symbol { get; set; }
 
-        [JsonProperty(PropertyName = "K")]
-        [DataMember(Order = 4)]
+        [JsonProperty(PropertyName = "k")]
+        [DataMember(Order = 4, Name = "k")]
         public BinanceKline Kline { get; set; }
     }
 }
