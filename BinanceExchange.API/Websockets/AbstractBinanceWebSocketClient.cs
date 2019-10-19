@@ -7,10 +7,9 @@ using BinanceExchange.API.Client.Interfaces;
 using BinanceExchange.API.Enums;
 using BinanceExchange.API.Extensions;
 using BinanceExchange.API.Models.WebSocket;
+using BinanceExchange.API.Serialization;
 using BinanceExchange.API.Utility;
 using log4net;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using WebSocketSharp;
 using IWebSocketResponse = BinanceExchange.API.Models.WebSocket.Interfaces.IWebSocketResponse;
 
@@ -38,16 +37,20 @@ namespace BinanceExchange.API.Websockets
         /// </summary>
         protected Dictionary<Guid, BinanceWebSocket> ActiveWebSockets;
         protected List<BinanceWebSocket> AllSockets;
+
+
         protected readonly IBinanceClient BinanceClient;
         protected ILog Logger;
+        protected ISerializationHandler SerializationHandler;
 
         protected const string AccountEventType = "outboundAccountInfo";
         protected const string OrderTradeEventType = "executionReport";
         protected const string AccountPositionEventType = "outboundAccountPosition";
 
 
-        public AbstractBinanceWebSocketClient(IBinanceClient binanceClient, ILog logger = null)
+        public AbstractBinanceWebSocketClient(IBinanceClient binanceClient, ILog logger = null, ISerializationHandler serializationHandler = null)
         {
+            SerializationHandler = serializationHandler ?? new NewtonsoftSerializationHandler();
             BinanceClient = binanceClient;
             ActiveWebSockets = new Dictionary<Guid, BinanceWebSocket>();
             AllSockets = new List<BinanceWebSocket>();
@@ -268,19 +271,19 @@ namespace BinanceExchange.API.Websockets
             websocket.OnMessage += (sender, e) =>
             {
                 Logger.Debug($"WebSocket Message Received on Endpoint: {endpoint.AbsoluteUri}");
-                var primitive = JsonConvert.DeserializeObject<BinanceWebSocketResponse>(e.Data);
+                var primitive = SerializationHandler.DeserializeObject<BinanceWebSocketResponse>(e.Data);
                 switch (primitive.EventType)
                 {
                     case AccountEventType:
-                        var userData = JsonConvert.DeserializeObject<BinanceAccountUpdateData>(e.Data);
+                        var userData = SerializationHandler.DeserializeObject<BinanceAccountUpdateData>(e.Data);
                         userDataWebSocketMessages.AccountUpdateMessageHandler?.Invoke(userData);
                         break;
                     case AccountPositionEventType:
-                        var accountData = JsonConvert.DeserializeObject<BinanceAccountUpdateData>(e.Data);
+                        var accountData = SerializationHandler.DeserializeObject<BinanceAccountUpdateData>(e.Data);
                         userDataWebSocketMessages.AccountBalanceChangeMessageHandler?.Invoke(accountData);
                         break;
                     case OrderTradeEventType:
-                        var orderTradeData = JsonConvert.DeserializeObject<BinanceTradeOrderData>(e.Data);
+                        var orderTradeData = SerializationHandler.DeserializeObject<BinanceTradeOrderData>(e.Data);
                         if (orderTradeData.ExecutionType == ExecutionType.Trade)
                         {
                             userDataWebSocketMessages.TradeUpdateMessageHandler?.Invoke(orderTradeData);
@@ -329,12 +332,7 @@ namespace BinanceExchange.API.Websockets
             websocket.OnMessage += (sender, e) =>
             {
                 Logger.Debug($"WebSocket Message Received on: {endpoint.AbsoluteUri}");
-                //TODO: Log message received
-                //ITraceWriter traceWriter = new MemoryTraceWriter();
-                //JsonSerializer.Create().Deserialize(
-                //var data = JsonConvert.DeserializeObject<T>(e.Data, new JsonSerializerSettings { TraceWriter = traceWriter });
-                //Logger.Debug(traceWriter.ToString());
-                var data = JsonConvert.DeserializeObject<T>(e.Data);
+                var data = SerializationHandler.DeserializeObject<T>(e.RawData);
                 messageEventHandler(data);
             };
             websocket.OnError += (sender, e) =>
