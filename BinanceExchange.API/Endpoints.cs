@@ -52,7 +52,7 @@ namespace BinanceExchange.API
 
         public static class UserStream
         {
-            internal static string ApiVersion = "v1";
+            internal static string ApiVersion = "v3";
 
             /// <summary>
             /// Start a user data stream
@@ -80,7 +80,7 @@ namespace BinanceExchange.API
 
         public static class General
         {
-            internal static string ApiVersion = "v1";
+            internal static string ApiVersion = "v3";
 
             /// <summary>
             /// Test connectivity to the Rest API.
@@ -101,7 +101,7 @@ namespace BinanceExchange.API
 
         public static class MarketData
         {
-            internal static string ApiVersion = "v1";
+            internal static string ApiVersion = "v3";
 
             /// <summary>
             /// Gets the order book with all bids and asks
